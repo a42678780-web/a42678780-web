@@ -1,0 +1,34 @@
+[
+  {
+    "id": "1767784382284",
+    "username": "a42678780",
+    "passwordHash": "$2b$10$4GKOWZH0Gkg2jzLhf2KlyuoLENvL54V4nFWa7W9wBEBbhSdYaOEmO",
+    "isPaid": true,
+    "role": "user",
+    "createdAt": "2026-01-07T11:13:02.284Z"
+  },
+  {
+    "id": "admin-1767784936897",
+    "username": "admin",
+    "passwordHash": "$2b$10$ScrzaxyVFACDlm7r/2TMheWnikVmDlhaDO/pW15zsmlfGlWeC074W",
+    "isPaid": true,
+    "role": "admin",
+    "createdAt": "2026-01-07T11:22:16.897Z"
+  },
+  {
+    "id": "1767784998479",
+    "username": "user1767784998427",
+    "passwordHash": "$2b$10$JrRAJtTPdpvIdpJnnzRxsu/Iqguyu7lxoONqMW6SfBlEZKCRXaZaO",
+    "isPaid": true,
+    "role": "user",
+    "createdAt": "2026-01-07T11:23:18.479Z"
+  },
+  {
+    "id": "1767785131370",
+    "username": "user1767785131316",
+    "passwordHash": "$2b$10$EeA2efzLD5uVJd4TGb8ke.EHVSZfVDLZ99SEWOTH9wxLCNYLXlHme",
+    "isPaid": true,
+    "role": "user",
+    "createdAt": "2026-01-07T11:25:31.370Z"
+  }
+]

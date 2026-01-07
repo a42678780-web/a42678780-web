@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>539 專業分析</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Desktop Header -->
+  <header>
+    <div class="logo">
+      <i class="fas fa-chart-pie"></i> 539 數據中心
+    </div>
+    
+    <!-- Desktop Navigation -->
+    <nav class="desktop-nav">
+      <div class="desktop-nav-item active" data-target="latest">最新開獎</div>
+      <div class="desktop-nav-item" data-target="trend">走勢分析</div>
+      <div class="desktop-nav-item" data-target="drag">拖牌大數據</div>
+      <div class="desktop-nav-item" data-target="calc">碰數試算</div>
+      <div class="desktop-nav-item" data-target="history">歷史紀錄</div>
+    </nav>
+
+    <!-- User Profile -->
+    <div class="user-profile" id="auth-section">
+      <div id="logged-in" class="hidden" style="display:flex; align-items:center; gap:10px;">
+        <div class="avatar" id="avatar-initial">U</div>
+        <div style="font-size: 0.9rem;">
+          <div style="font-weight:700;" id="display-username">User</div>
+          <div style="color:var(--success); font-size:0.75rem;">VIP 會員</div>
+        </div>
+        <button id="logout-btn" class="btn secondary" style="padding: 6px 12px; font-size:0.8rem;">登出</button>
+      </div>
+      <div id="logged-out">
+        <a href="login.html" class="btn">登入</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    
+    <!-- Mobile Header (Only visible on mobile) -->
+    <div class="mobile-header" style="display:none;">
+      <div class="logo" style="font-size:1.2rem;">539 數據中心</div>
+      <div id="mobile-auth-btn">
+         <!-- Will be injected by JS -->
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <main id="content-area">
+
+      <!-- View: Latest (Home) -->
+      <section id="view-latest" class="view-section">
+        <!-- Countdown Card -->
+        <div class="card highlight" style="text-align:center; padding: 40px 20px;">
+          <div class="subtitle" style="color: rgba(255,255,255,0.9);">下期開獎倒數</div>
+          <div id="timer" class="timer-display">00:00:00</div>
+          <div id="next-draw-date" style="opacity:0.9; font-size:0.9rem;">--</div>
+        </div>
+
+        <!-- Latest Result Card -->
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3>最新開獎結果</h3>
+            <button id="refresh-btn" class="btn secondary" style="padding:6px 12px; font-size:0.8rem;">
+              <i class="fas fa-sync-alt"></i> 刷新
+            </button>
+          </div>
+          <div id="latest-result" style="text-align:center;">
+             <p class="subtitle">載入中...</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- View: Trend -->
+      <section id="view-trend" class="view-section hidden">
+        <div class="card">
+          <h3><i class="fas fa-chart-bar" style="color:var(--primary);"></i> 號碼熱度分析</h3>
+          <div style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+             <select id="stats-window" style="width:auto;">
+               <option value="10">近 10 期</option>
+               <option value="30" selected>近 30 期</option>
+               <option value="50">近 50 期</option>
+             </select>
+          </div>
+          <div id="stats-chart" class="stats-container"></div>
+        </div>
+
+        <div class="card">
+          <h3><i class="fas fa-link" style="color:var(--secondary);"></i> 連莊機率</h3>
+          <div id="trend-loading" class="subtitle hidden">分析中...</div>
+          <div id="consecutive-stats"></div>
+        </div>
+      </section>
+
+      <!-- View: Drag (拖牌) -->
+      <section id="view-drag" class="view-section hidden">
+        <div class="card">
+          <h3>拖牌大數據</h3>
+          <p class="subtitle">點擊一個號碼，查看它開出後，下期最容易跟著開誰</p>
+          
+          <div class="number-grid" id="drag-selector">
+            <!-- JS 產生 01-39 -->
+          </div>
+        </div>
+
+        <div id="drag-result-container" class="hidden">
+           <!-- 結果會動態插入這裡 -->
+        </div>
+      </section>
+
+      <!-- View: Calc (碰數) -->
+      <section id="view-calc" class="view-section hidden">
+        <div class="card">
+          <h3>多選碰數回測</h3>
+          <p class="subtitle">選取多個號碼，計算組合數</p>
+          
+          <div style="background:var(--bg-body); padding:16px; border-radius:var(--radius-sm); margin:20px 0;">
+             <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <span class="subtitle">已選</span> 
+                  <span id="calc-selected-count" style="font-weight:bold; color:var(--primary); font-size:1.2rem;">0</span> 
+                  <span class="subtitle">碼</span>
+                </div>
+                <button id="calc-reset-btn" class="btn secondary" style="font-size:0.8rem;">清除</button>
+             </div>
+             <div id="calc-selected-balls" class="ball-container" style="justify-content:flex-start; margin-top:10px; min-height:44px;">
+                <!-- Selected balls appear here -->
+             </div>
+          </div>
+
+          <div style="margin-top:20px;">
+             <div class="subtitle" style="margin-bottom:10px;">點擊下方號碼進行選擇：</div>
+             <div class="number-grid" id="calc-selector">
+                <!-- JS 產生 01-39 -->
+             </div>
+          </div>
+
+          <div class="card highlight" style="margin-top:20px;">
+             <div style="display:flex; justify-content:space-around; text-align:center;">
+                <div>
+                   <div style="font-size:0.8rem; opacity:0.8;">二星</div>
+                   <div id="calc-res-2" style="font-size:1.5rem; font-weight:bold;">0</div>
+                   <div style="font-size:0.7rem;">碰</div>
+                </div>
+                <div>
+                   <div style="font-size:0.8rem; opacity:0.8;">三星</div>
+                   <div id="calc-res-3" style="font-size:1.5rem; font-weight:bold;">0</div>
+                   <div style="font-size:0.7rem;">碰</div>
+                </div>
+                <div>
+                   <div style="font-size:0.8rem; opacity:0.8;">四星</div>
+                   <div id="calc-res-4" style="font-size:1.5rem; font-weight:bold;">0</div>
+                   <div style="font-size:0.7rem;">碰</div>
+                </div>
+             </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- View: History -->
+      <section id="view-history" class="view-section hidden">
+        <div class="card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3>歷史紀錄</h3>
+            <button id="download-csv" class="btn secondary"><i class="fas fa-download"></i> CSV</button>
+          </div>
+          
+          <div style="overflow-x:auto;">
+            <table id="history-table">
+              <thead>
+                <tr>
+                  <th>日期</th>
+                  <th>號碼</th>
+                </tr>
+              </thead>
+              <tbody id="history-list"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Admin Panel (Hidden by default) -->
+        <div style="text-align:center; margin-top:20px;">
+            <button id="toggle-admin" class="btn secondary" style="background:transparent; color:var(--text-secondary);">
+                <i class="fas fa-cog"></i> 管理員工具
+            </button>
+        </div>
+        
+        <div id="admin-panel" class="card hidden" style="background:#FFF5F5; border:1px solid #FFE0E0;">
+            <h4 style="color:var(--danger); margin-bottom:15px;">管理員專區</h4>
+            
+            <div style="margin-bottom:20px; padding-bottom:20px; border-bottom:1px solid rgba(0,0,0,0.05);">
+                <h5 style="margin-bottom:10px;">生成激活碼</h5>
+                <div style="display:flex; gap:10px;">
+                    <button id="gen-codes-btn" class="btn success">生成 5 組代碼</button>
+                    <button id="view-codes-btn" class="btn secondary">查看未使用代碼</button>
+                </div>
+                <div id="codes-display" style="margin-top:10px; font-family:monospace; background:white; padding:10px; border-radius:4px; min-height:20px;"></div>
+            </div>
+
+            <h5 style="margin-bottom:10px;">數據修正</h5>
+            <form id="fix-form" style="display:flex; gap:10px; flex-wrap:wrap;">
+                <input type="text" id="fix-date" placeholder="YYYY/MM/DD" style="flex:1;">
+                <input type="text" id="fix-numbers" placeholder="01,02,03,04,05" style="flex:2;">
+                <button type="submit" class="btn danger">修正</button>
+            </form>
+            <div style="margin-top:10px; border-top:1px solid rgba(0,0,0,0.05); padding-top:10px;">
+                 <button id="sync-history-btn" class="btn secondary" style="width:100%;">同步歷史數據</button>
+                 <span id="sync-status" class="subtitle" style="display:block; margin-top:5px;"></span>
+            </div>
+        </div>
+      </section>
+
+      <footer style="margin-top: 50px; margin-bottom: 80px; text-align: center; color: var(--text-secondary); font-size: 0.9rem;">
+          <p>&copy; 2025 539 數據中心 | <a href="privacy.html" target="_blank" style="color: inherit;">隱私權政策</a> | <a href="#" id="feedback-link" style="color: inherit;">意見回饋</a></p>
+      </footer>
+
+    </main>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedback-modal" class="modal hidden">
+    <div class="modal-content card">
+        <h3 style="margin-bottom:15px;">意見回饋</h3>
+        <p style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:10px;">歡迎提供您的寶貴意見或回報問題：</p>
+        <textarea id="feedback-msg" rows="5" style="width:100%; margin-bottom:10px; padding:10px; border:1px solid #ddd; border-radius:4px;" placeholder="請輸入您的意見..."></textarea>
+        <input id="feedback-contact" type="text" style="width:100%; margin-bottom:20px; padding:10px; border:1px solid #ddd; border-radius:4px;" placeholder="聯絡方式 (Email/電話，選填)">
+        <div style="display:flex; justify-content:flex-end; gap:10px;">
+            <button id="feedback-close" class="btn secondary">取消</button>
+            <button id="feedback-submit" class="btn primary">送出</button>
+        </div>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Navigation -->
+  <nav class="bottom-nav">
+    <div class="nav-item active" data-target="latest">
+      <i class="fas fa-home"></i>
+      <span>首頁</span>
+    </div>
+    <div class="nav-item" data-target="trend">
+      <i class="fas fa-chart-line"></i>
+      <span>走勢</span>
+    </div>
+    <div class="nav-item" data-target="drag">
+      <i class="fas fa-magnet"></i>
+      <span>拖牌</span>
+    </div>
+    <div class="nav-item" data-target="calc">
+      <i class="fas fa-calculator"></i>
+      <span>碰數</span>
+    </div>
+    <div class="nav-item" data-target="history">
+      <i class="fas fa-list"></i>
+      <span>紀錄</span>
+    </div>
+  </nav>
+
+  <script src="app.js"></script>
+</body>
+</html>

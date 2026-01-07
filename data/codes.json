@@ -1,0 +1,23 @@
+[
+  {
+    "code": "VIP888",
+    "isUsed": true,
+    "createdAt": "2026-01-07T12:00:00Z",
+    "usedBy": "a42678780",
+    "usedAt": "2026-01-07T11:13:02.188Z"
+  },
+  {
+    "code": "TEST01",
+    "isUsed": true,
+    "createdAt": "2026-01-07T12:00:00Z",
+    "usedBy": "user1767784998427",
+    "usedAt": "2026-01-07T11:23:18.429Z"
+  },
+  {
+    "code": "DEMO99",
+    "isUsed": true,
+    "createdAt": "2026-01-07T12:00:00Z",
+    "usedBy": "user1767785131316",
+    "usedAt": "2026-01-07T11:25:31.317Z"
+  }
+]

@@ -1,0 +1,474 @@
+:root {
+  /* --- Color Palette --- */
+  --primary: #4318FF;       /* 主色調：現代藍紫色 */
+  --primary-light: #F4F7FE; /* 淺色背景 */
+  --secondary: #6AD2FF;     /* 次要色 */
+  --accent: #FFB547;        /* 強調色 (如熱門號碼) */
+  --danger: #E31A1A;        /* 錯誤/刪除 */
+  --success: #05CD99;       /* 成功/確認 */
+  
+  /* --- Neutral Colors --- */
+  --bg-body: #F4F7FE;       /* 整體背景 */
+  --bg-card: #FFFFFF;       /* 卡片背景 */
+  --text-main: #2B3674;     /* 主要文字 (深藍) */
+  --text-secondary: #A3AED0;/* 次要文字 (灰藍) */
+  --border: #E0E5F2;        /* 邊框 */
+
+  /* --- Shadows & Radius --- */
+  --shadow-sm: 0 2px 4px rgba(112, 144, 176, 0.08);
+  --shadow-md: 0 4px 12px rgba(112, 144, 176, 0.12);
+  --shadow-lg: 0 10px 30px rgba(112, 144, 176, 0.15);
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 24px;
+  --radius-full: 999px;
+
+  /* --- Spacing --- */
+  --nav-height-mobile: 70px;
+  --header-height-desktop: 80px;
+}
+
+/* --- Reset & Base --- */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  line-height: 1.5;
+  padding-bottom: calc(var(--nav-height-mobile) + 20px); /* 留出底部導航空間 */
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-bottom: 0;
+    padding-top: var(--header-height-desktop);
+  }
+}
+
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; padding: 0; margin: 0; }
+button, input, select { font-family: inherit; }
+
+/* --- Layout Containers --- */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* --- Typography --- */
+h1, h2, h3, h4, h5, h6 {
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+h1 { font-size: 1.8rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 1.25rem; }
+
+.subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* --- Components: Cards --- */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 24px;
+  margin-bottom: 24px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: 1px solid transparent;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.card.highlight {
+  background: linear-gradient(135deg, #4318FF 0%, #868CFF 100%);
+  color: white;
+}
+
+.card.highlight .subtitle {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.card.highlight h3 {
+  color: white;
+}
+
+/* --- Components: Buttons --- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background-color: var(--primary);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.btn:hover {
+  background-color: #3311CC;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn:disabled {
+  background-color: var(--text-secondary);
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn.secondary {
+  background-color: #EFF4FB;
+  color: var(--primary);
+}
+
+.btn.secondary:hover {
+  background-color: #E0E5F2;
+}
+
+.btn.danger {
+  background-color: #FFF5F5;
+  color: var(--danger);
+}
+
+.btn.danger:hover {
+  background-color: #FFE0E0;
+}
+
+/* --- Components: Lottery Balls --- */
+.ball-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.ball {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text-main);
+  background: #EFF4FB; /* Default */
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.05);
+  transition: all 0.2s;
+}
+
+/* 根據號碼區間給色 (JS會動態加class或這裡寫死) - 參考圖片風格 */
+.ball.active, .ball:hover {
+  transform: scale(1.1);
+  color: white;
+}
+
+/* 範例顏色類 */
+.ball.blue { background: #4318FF; color: white; }
+.ball.green { background: #05CD99; color: white; }
+.ball.orange { background: #FFB547; color: white; }
+.ball.red { background: #E31A1A; color: white; }
+.ball.purple { background: #868CFF; color: white; }
+
+/* 小球 (列表用) */
+.mini-balls {
+  display: flex;
+  gap: 6px;
+}
+.mini-balls span {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #EFF4FB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+/* --- Header (Desktop) --- */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height-desktop);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-sm);
+  z-index: 100;
+  display: none; /* Mobile 隱藏 */
+  padding: 0 40px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@media (min-width: 768px) {
+  header { display: flex; }
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* --- Bottom Navigation (Mobile) --- */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-height-mobile);
+  background: var(--bg-card);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1000;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+@media (min-width: 768px) {
+  .bottom-nav { display: none; } /* Desktop 隱藏底欄 */
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 10px;
+  gap: 4px;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+}
+
+.nav-item i {
+  font-size: 20px;
+  margin-bottom: 2px;
+  transition: transform 0.2s;
+}
+
+.nav-item.active {
+  color: var(--primary);
+}
+
+.nav-item.active i {
+  transform: translateY(-2px);
+}
+
+/* --- Desktop Sidebar/Nav (Optional) --- */
+.desktop-nav {
+  display: none;
+}
+@media (min-width: 768px) {
+  .desktop-nav {
+    display: flex;
+    gap: 30px;
+  }
+  .desktop-nav-item {
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+  }
+  .desktop-nav-item.active {
+    color: var(--primary);
+    font-weight: 700;
+  }
+}
+
+/* --- Main Content Areas --- */
+.view-section {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Specific Views --- */
+
+/* Countdown */
+.timer-display {
+  font-size: 3rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace; /* Monospaced for numbers */
+  letter-spacing: 2px;
+  margin: 10px 0;
+}
+
+/* Drag Analysis (Grid of selectable numbers) */
+.number-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.number-btn {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+.number-btn:hover { border-color: var(--primary); color: var(--primary); }
+.number-btn.selected {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+  box-shadow: 0 4px 10px rgba(67, 24, 255, 0.4);
+}
+
+/* Stats Bars */
+.stats-container {
+  height: 200px;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding-top: 20px;
+}
+.stat-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.stat-bar {
+  width: 100%;
+  background: #EFF4FB;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.5s ease;
+  min-height: 4px;
+}
+.stat-bar.hot { background: var(--primary); }
+.stat-bar.warm { background: var(--secondary); }
+.stat-num { font-size: 10px; color: var(--text-secondary); }
+
+/* Tables */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+th {
+  text-align: left;
+  padding: 16px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  border-bottom: 1px solid var(--border);
+}
+td {
+  padding: 16px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-main);
+}
+tr:last-child td { border-bottom: none; }
+
+/* Forms */
+input[type="text"], input[type="password"], input[type="number"], select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  outline: none;
+  transition: border-color 0.2s;
+  background: var(--bg-body);
+}
+input:focus, select:focus {
+  border-color: var(--primary);
+  background: white;
+}
+
+/* Auth Profile */
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Responsive Utilities */
+.hidden { display: none !important; }
+
+@media (max-width: 600px) {
+  .timer-display { font-size: 2rem; }
+  .ball { width: 36px; height: 36px; font-size: 16px; }
+  .container { padding: 16px; }
+  
+  /* Mobile Header (Simple top bar) */
+  .mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    margin-bottom: 10px;
+  }
+}
+
+/* --- Modal --- */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+.modal.hidden { display: none; }
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+}
+
